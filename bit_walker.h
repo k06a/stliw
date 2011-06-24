@@ -72,7 +72,8 @@ public:
         return *this;
     }
 
-    bit_walk_iterator & operator = (int x)
+    template<typename TParam>
+    bit_walk_iterator & operator = (TParam x)
     {
         int byteNumber = nextBit / 8;
         int bitNumber  = nextBit % 8;
@@ -204,11 +205,10 @@ bit_walker(IterType it)
 {
     return it;
 }
-/*
+
 template<typename IterType>
 bit_walk_iterator<typename std::iterator_traits<IterType>::iterator_category,IterType,int>
 bit_walker(IterType it)
 {
     return it;
 }
-*/

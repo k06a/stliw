@@ -18,15 +18,24 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="gmock-1.6.0\src\gmock-all.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gmock-1.6.0\gtest\src\gtest-all.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bit_walker_test.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="field_walker_test.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bit_walker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="field_walker.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="bit_walker_old.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

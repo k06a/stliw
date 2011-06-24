@@ -4,5 +4,6 @@ Debug/
 .user$
 .suo$
 .sdf$
+ipch/
 syntax: glob
 Release/

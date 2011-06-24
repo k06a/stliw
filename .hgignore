@@ -1,0 +1,8 @@
+syntax: regexp
+_ReSharper
+Debug/
+.user$
+.suo$
+.sdf$
+syntax: glob
+Release/

@@ -6,21 +6,18 @@
 
 using stliw::bit_walker;
 
-TEST(bit_walker, countBitsInAAAA)
+TEST(bit_walker, countBitsInABAB)
 {
     //
-    // 0A       0A       0A       0A
-    // 0   A    0   A    0   A    0   A
-    // 00001010 00001010 00001010 00001010
+    // 00001010 00001011 00001010 00001011
+    //     * *      * **     * *      * **
     //
     
-    char input[] = "\x0A\x0A\x0A\x0A";
+    char input[] = "\x0A\x0B\x0A\x0B";
     char * input_ptr = input;
     
-    /*
     int a = std::count(bit_walker(input_ptr),
-                       bit_walker(input_ptr+4), 1);
+                       bit_walker(input_ptr+1), 1);
 
-    EXPECT_EQ(4*2, a);
-    */
+    EXPECT_EQ(2 + 3 + 2 + 3, a);
 }

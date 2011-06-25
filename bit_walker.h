@@ -1,7 +1,7 @@
 //
 // bit_walker.h
 // Copyright (c) 2011, Bukov Anton (k06aaa@gmail.com)
-// This program is released under the LGPL license.
+// This source is released under the LGPL license.
 //
 
 #include <iterator>
@@ -16,16 +16,16 @@ namespace stliw
     {
     public:
         IterType it;
-        T nextBit;
+        int nextBit;
 
     public:
         bit_walk_iterator()
-            : it(), nextBit(T())
+            : it(), nextBit(int())
         {
         }
 
         bit_walk_iterator(IterType & it)
-            : it(it), nextBit(T())
+            : it(it), nextBit(int())
         {
         }
 
@@ -61,7 +61,7 @@ namespace stliw
             return !(*this == rhs);
         }
 
-        const T operator * () const
+        const T value () const
         {
             int byteNumber = nextBit / 8;
             int bitNumber  = nextBit % 8;
@@ -69,6 +69,11 @@ namespace stliw
             if ((*it) & (1 << bitNumber))
                 return 1;
             return 0;
+        }
+
+        const T operator * () const
+        {
+            return value;
         }
 
         // Output category methods
@@ -87,6 +92,11 @@ namespace stliw
             ch &= (-1)^(1 << bitNumber);
             ch |= ((x?1:0) << bitNumber)
             return *this;
+        }
+
+        operator T () const
+        {
+            return value();
         }
 
         // Bidirectional category methods
@@ -201,6 +211,15 @@ namespace stliw
         const bit_walk_iterator<Category,IterType,T> & b)
     {
         return (a.it - b.it) + (a.nextBit - b.nextBit);
+    }
+
+    template<typename Category, typename IterType, typename T>
+    ptrdiff_t operator - (
+        const bit_walk_iterator<Category,IterType,T> & a,
+        const IterType & b)
+    {
+        return (a.it - b.it)*CHAR_BIT*sizeof(value_type)
+             + (CHAR_BIT*sizeof(value_type) - a.nextBit);
     }
 
     /// --------------------------------------------------------------------

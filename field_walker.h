@@ -1,7 +1,7 @@
 //
-// bit_walker.h
+// field_walker.h
 // Copyright (c) 2011, Bukov Anton (k06aaa@gmail.com)
-// This program is released under the LGPL license.
+// This source is released under the LGPL license.
 //
 
 #include <iterator>

@@ -8,45 +8,146 @@
 
 namespace stliw
 {
+    enum SortOrder
+    {
+        Ascending,
+        Descending
+    };
+
     template<typename Category,
              typename IterType,
-             typename T>
+             typename T,
+             SortOrder SORT = Ascending>
     class sort_iterator
         : public std::iterator<Category,T>
     {
     public:
-        IterType current;
+        IterType begin;
         IterType end;
+        IterType prevIter;
+        int index;
 
     public:
         sort_iterator()
-            : current(IterType())
+            : begin(IterType())
             , end(IterType())
+            , prevIter(IterType())
+            , index(0)
         {
         }
 
-        sort_iterator(IterType & current, IterType & end)
-            : current(current)
+        sort_iterator(const IterType & begin,
+                      const IterType & end)
+            : begin(begin)
             , end(end)
+            , prevIter(IterType())
+            , index(0)
         {
-            makeSortStep();
+            if (begin == end)
+            {
+                prevIter = end;
+                return;
+            }
+            
+            if (SORT == Ascending)
+                makeSortStepForward();
+            else
+                makeSortStepBackward();
         }
 
-        void makeSortStep()
+    private:
+        void makeSortStepForward()
         {
-            IterType minValueIter = current;
-            for(IterType iter = current; iter != end; ++iter)
-                if (*iter < *minValueIter)
-                    minValueIter = iter;
-            std::iter_swap(minValueIter, current);
+            if (index == end - begin)
+            {
+                prevIter = end;
+                return;
+            }
+
+            if (index == 0)
+            {
+                prevIter = begin;
+                for(IterType it = begin; it != end; ++it)
+                    if (*it < *prevIter)
+                        prevIter = it;
+                index++;
+                return;
+            }
+
+            IterType minValueIter = begin;
+            for(IterType it = begin; it != end; ++it)
+            {
+                if (*prevIter < *it)
+                {
+                    if (*it < *minValueIter)
+                        minValueIter = it; 
+                }
+                else
+                if (*prevIter == *it)
+                {
+                    if (prevIter < it)
+                    {
+                        minValueIter = it;
+                        break;
+                    }
+                }
+            }
+            prevIter = minValueIter;
+            index++;
+        }
+
+        void makeSortStepBackward()
+        {
+            if (index == end - begin)
+            {
+                prevIter = end;
+                return;
+            }
+
+            if (index == 0)
+            {
+                prevIter = begin;
+                for(IterType it = begin; it != end; ++it)
+                    if (*prevIter < *it)
+                        prevIter = it;
+                index--;
+                return;
+            }
+
+            IterType maxValueIter = begin;
+            for(IterType it = begin; it != end; ++it)
+            {
+                if (*it < *prevIter)
+                {
+                    if (*maxValueIter == *prevIter)
+                        maxValueIter = it;
+                    else
+                    if (*maxValueIter < *it)
+                        maxValueIter = it; 
+                }
+                else
+                if (*prevIter == *it)
+                {
+                    if (it < prevIter)
+                    {
+                        maxValueIter = it;
+                        break;
+                    }
+                }
+            }
+            prevIter = maxValueIter;
+            index--;
         }
 
         // Base methods
 
+    public:
         sort_iterator & operator ++ ()
         {
-            ++current;
-            makeSortStep();
+            if (SORT == Ascending)
+                makeSortStepForward();
+            else
+                makeSortStepBackward();
             return *this;
         }
 
@@ -61,12 +162,12 @@ namespace stliw
 
         bool operator == (const sort_iterator & rhs) const
         {
-            return (current == rhs.current);
+            return (prevIter == rhs.prevIter);
         }
 
         bool operator == (const IterType & rhs) const
         {
-            return (current == rhs);
+            return (begin + index == rhs);
         }
 
         bool operator != (const sort_iterator & rhs) const
@@ -81,14 +182,17 @@ namespace stliw
 
         value_type & operator * ()
         {
-            return *current;
+            return *prevIter;
         }
 
         // Bidirectional category methods
 
         sort_iterator & operator -- ()
         {
-            --current;
+            if (SORT == Ascending)
+                makeSortStepBackward();
+            else
+                makeSortStepForward();
             return *this;
         }
 
@@ -104,34 +208,34 @@ namespace stliw
         sort_iterator & operator += (int n)
         {
             for (int i = 0; i < n; i++)
-                ++current;
+                ++begin;
             return *this;
         }
 
         sort_iterator & operator -= (int n)
         {
-            current -= n;
+            begin -= n;
             return *this;
         }
 
         bool operator < (const sort_iterator & der) const
         {
-            return (current < der.current);
+            return (begin < der.begin);
         }
 
         bool operator > (const sort_iterator & der) const
         {
-            return (current > der.current);
+            return (begin > der.begin);
         }
 
         bool operator <= (const sort_iterator & der) const
         {
-            return (current <= der.current);
+            return (begin <= der.begin);
         }
 
         bool operator >= (const sort_iterator & der) const
         {
-            return (current >= der.current);
+            return (begin >= der.begin);
         }
 
         sort_iterator operator [] (int n) const
@@ -141,57 +245,76 @@ namespace stliw
         }
     };
 
-    template<typename Category, typename IterType, typename T>
-    sort_iterator<Category,IterType,T> operator + (
-        const sort_iterator<Category,IterType,T> & der, int n)
+    template<typename Category, typename IterType, typename T, SortOrder SORT>
+    sort_iterator<Category,IterType,T,SORT> operator + (
+        const sort_iterator<Category,IterType,T,SORT> & der, int n)
     {
-        sort_iterator<Category,IterType,T> tmp(der);
+        sort_iterator<Category,IterType,T,SORT> tmp(der);
         return tmp += n;
     }
 
-    template<typename Category, typename IterType, typename T>
-    sort_iterator<Category,IterType,T> operator + (
-        int n, const sort_iterator<Category,IterType,T> & der)
+    template<typename Category, typename IterType, typename T, SortOrder SORT>
+    sort_iterator<Category,IterType,T,SORT> operator + (
+        int n, const sort_iterator<Category,IterType,T,SORT> & der)
     {
-        sort_iterator<Category,IterType,T> tmp(der);
+        sort_iterator<Category,IterType,T,SORT> tmp(der);
         return tmp += n;
     }
 
-    template<typename Category, typename IterType, typename T>
-    sort_iterator<Category,IterType,T> operator - (
-        const sort_iterator<Category,IterType,T> & der, int n)
+    template<typename Category, typename IterType, typename T, SortOrder SORT>
+    sort_iterator<Category,IterType,T,SORT> operator - (
+        const sort_iterator<Category,IterType,T,SORT> & der, int n)
     {
-        sort_iterator<Category,IterType,T> tmp(der);
+        sort_iterator<Category,IterType,T,SORT> tmp(der);
         return tmp -= n;
     }
 
-    template<typename Category, typename IterType, typename T>
+    template<typename Category, typename IterType, typename T, SortOrder SORT>
     ptrdiff_t operator - (
-        const sort_iterator<Category,IterType,T> & a,
-        const sort_iterator<Category,IterType,T> & b)
+        const sort_iterator<Category,IterType,T,SORT> & a,
+        const sort_iterator<Category,IterType,T,SORT> & b)
     {
-        return (a.current - b.current);
+        return (a.begin - b.begin);
     }
 
-    template<typename Category, typename IterType, typename T>
+    template<typename Category, typename IterType, typename T, SortOrder SORT>
     ptrdiff_t operator - (
-        const sort_iterator<Category,IterType,T> & a,
+        const sort_iterator<Category,IterType,T,SORT> & a,
         const IterType & b)
     {
-        return (a.current - b);
+        return (a.begin - b);
     }
 
     /// --------------------------------------------------------------------
 
+    template<SortOrder SORT, typename IterType>
+    sort_iterator<typename std::iterator_traits<IterType>::iterator_category,
+                  IterType,
+                  typename std::iterator_traits<IterType>::value_type,
+                  SORT>
+    sorter(IterType begin, IterType end = IterType())
+    {
+        if (end == IterType())
+            end = begin;
+        return sort_iterator<typename std::iterator_traits<IterType>::iterator_category,
+                             IterType,
+                             typename std::iterator_traits<IterType>::value_type,
+                             SORT>(begin,end);
+    }
+
     template<typename IterType>
     sort_iterator<typename std::iterator_traits<IterType>::iterator_category,
                   IterType,
-                  typename std::iterator_traits<IterType>::value_type>
-    sorter(IterType current, IterType end)
+                  typename std::iterator_traits<IterType>::value_type,
+                  Ascending>
+    sorter(IterType begin, IterType end = IterType())
     {
+        if (end == IterType())
+            end = begin;
         return sort_iterator<typename std::iterator_traits<IterType>::iterator_category,
                              IterType,
-                             typename std::iterator_traits<IterType>::value_type>(current,end);
+                             typename std::iterator_traits<IterType>::value_type,
+                             Ascending>(begin,end);
     }
 }
 // namespace stliw

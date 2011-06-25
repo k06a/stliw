@@ -13,9 +13,9 @@ TEST(sort_iterator, ascSortArray)
     // B:{ 0,0,0,0,0 } => B:{ 1,2,3,4,5 }
     //
 
-    int input[5] = { 5,3,2,1,4 };
+    int input[5]  = { 5,3,2,1,4 };
     int output[5] = { 0,0,0,0,0 };
-    int * input_ptr = (int *)input;
+    int * input_ptr  = (int *)input;
     int * output_ptr = (int *)output;
 
     std::copy(sorter(input_ptr,input_ptr+5),
@@ -44,9 +44,9 @@ TEST(sort_iterator, ascSortArrayWithDuplicates)
     // B:{ 0,0,0,0,0 } => B:{ 1,2,2,2,5 }
     //
 
-    int input[5] = { 5,2,1,2,2 };
+    int input[5]  = { 5,2,1,2,2 };
     int output[5] = { 0,0,0,0,0 };
-    int * input_ptr = (int *)input;
+    int * input_ptr  = (int *)input;
     int * output_ptr = (int *)output;
 
     std::copy(sorter(input_ptr,input_ptr+5),
@@ -72,12 +72,12 @@ TEST(sort_iterator, descSortArray)
 {
     //
     // A:{ 5,3,2,1,4 } => A:{ 5,3,2,1,4 }
-    // B:{ 0,0,0,0,0 } => B:{ 1,2,3,4,5 }
+    // B:{ 0,0,0,0,0 } => B:{ 5,4,3,2,1 }
     //
 
-    int input[5] = { 5,3,2,1,4 };
+    int input[5]  = { 5,3,2,1,4 };
     int output[5] = { 0,0,0,0,0 };
-    int * input_ptr = (int *)input;
+    int * input_ptr  = (int *)input;
     int * output_ptr = (int *)output;
 
     std::copy(sorter<stliw::Descending>(input_ptr,input_ptr+5),
@@ -103,12 +103,12 @@ TEST(sort_iterator, descSortArrayWithDuplicates)
 {
     //
     // A:{ 5,2,1,2,2 } => A:{ 5,2,1,2,2 }
-    // B:{ 0,0,0,0,0 } => B:{ 1,2,2,2,5 }
+    // B:{ 0,0,0,0,0 } => B:{ 5,2,2,2,1 }
     //
 
-    int input[5] = { 5,2,1,2,2 };
+    int input[5]  = { 5,2,1,2,2 };
     int output[5] = { 0,0,0,0,0 };
-    int * input_ptr = (int *)input;
+    int * input_ptr  = (int *)input;
     int * output_ptr = (int *)output;
 
     std::copy(sorter<stliw::Descending>(input_ptr,input_ptr+5),

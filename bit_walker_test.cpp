@@ -4,6 +4,8 @@
 #include <algorithm>
 #include "bit_walker.h"
 
+using stliw::bit_walker;
+
 TEST(bit_walker, countBitsInAAAA)
 {
     //

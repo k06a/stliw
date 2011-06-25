@@ -30,12 +30,18 @@
     <ClCompile Include="field_walker_test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="sort_iterator_test.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bit_walker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="field_walker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sort_iterator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -81,10 +81,12 @@
     <ClCompile Include="gmock-1.6.0\gtest\src\gtest-all.cc" />
     <ClCompile Include="gmock-1.6.0\src\gmock-all.cc" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="sort_iterator_test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bit_walker.h" />
     <ClInclude Include="field_walker.h" />
+    <ClInclude Include="sort_iterator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
